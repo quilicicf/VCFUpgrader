@@ -18,7 +18,6 @@
   },
   "homepage": "https://github.com/quilicicf/VCFUpgrader#readme",
   "dependencies": {
-    "lodash-es": "4.17.15",
     "quoted-printable": "1.0.1",
     "utf8": "3.0.0"
   }

@@ -1,0 +1,22 @@
+{
+  "name": "vcfupgrader",
+  "version": "1.0.0",
+  "description": "Upgrade VCF files from v2.1 to v4.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/quilicicf/VCFUpgrader.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/quilicicf/VCFUpgrader/issues"
+  },
+  "homepage": "https://github.com/quilicicf/VCFUpgrader#readme",
+  "dependencies": {
+    "lodash-es": "4.17.15"
+  }
+}

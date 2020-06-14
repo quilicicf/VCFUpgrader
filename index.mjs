@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+import { tmpdir } from 'os';
+import { resolve, basename } from 'path';
 import { readFileSync, writeFileSync } from 'fs';
 
 import migrateTelLine from './lib/migrateTelLine.mjs';
@@ -11,7 +13,7 @@ import migrateAddressLine from './lib/migrateAddressLine.mjs';
 import migrateFullNameLine from './lib/migrateFullNameLine.mjs';
 import decodeQuotedPrintable from './lib/decodeQuotedPrintable.mjs';
 
-const [ inputFilePath, outputFilePart ] = process.argv.slice(2);
+const [ inputFilePath ] = process.argv.slice(2);
 
 const fileContent = readFileSync(inputFilePath, 'utf8');
 
@@ -62,9 +64,13 @@ const { lines, contactNames } = fileContent.split('\n')
     { lines: [], contactNames: [], isInTextNode: false },
   );
 
+const inputFileName = basename(inputFilePath);
+const outputFileName = inputFileName.replace(/\.vcf/, '-v4.vcf');
+const outputFilePath = resolve(tmpdir(), outputFileName);
+
 contactNames.sort();
 process.stdout.write(`${contactNames.join('\n')}\n`);
+process.stdout.write(`Writing output to ${outputFilePath}\n`);
 
 const newFileContent = lines.join('\n');
-
-writeFileSync(outputFilePart, newFileContent, 'utf8');
+writeFileSync(outputFilePath, newFileContent, 'utf8');

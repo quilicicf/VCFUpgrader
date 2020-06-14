@@ -3,6 +3,7 @@
 import { readFileSync, writeFileSync } from 'fs';
 
 import migrateTelLine from './lib/migrateTelLine.mjs';
+import migrateOrgLine from './lib/migrateOrgLine.mjs';
 import migrateNameLine from './lib/migrateNameLine.mjs';
 import migrateEmailLine from './lib/migrateEmailLine.mjs';
 import migratePhotoLine from './lib/migratePhotoLine.mjs';
@@ -33,6 +34,9 @@ const { lines, contactNames } = fileContent.split('\n')
         const fullName = migrateFullNameLine(line);
         seed.contactNames.push(fullName);
         seed.lines.push(fullName);
+      } else if (/^ORG[:;]/.test(line)) {
+        seed.isInTextNode = true;
+        seed.lines.push(migrateOrgLine(line));
       } else if (/^TEL[:;]/.test(line)) {
         seed.isInTextNode = true;
         seed.lines.push(migrateTelLine(line));
@@ -45,8 +49,12 @@ const { lines, contactNames } = fileContent.split('\n')
       } else if (/^PHOTO[:;]/.test(line)) {
         seed.isInTextNode = false;
         seed.lines.push(migratePhotoLine(line));
+      } else if (seed.isInTextNode) {
+        const decodedLine = decodeQuotedPrintable(line);
+        const lastLine = seed.lines.pop();
+        seed.lines.push(lastLine + decodedLine);
       } else {
-        seed.lines.push(seed.isInTextNode ? decodeQuotedPrintable(line) : line);
+        seed.lines.push(line);
       }
 
       return seed;
